@@ -1,5 +1,5 @@
 import 'package:flutter/material.dart';
-import 'package:flutter/widgets.dart';
+import 'package:flutter_animations/heropage.dart';
 
 void main() {
   runApp(const MyApp());
@@ -41,13 +41,27 @@ class _MyHomePageState extends State<MyHomePage> {
           backgroundColor: Theme.of(context).colorScheme.inversePrimary,
           title: Text(widget.title),
         ),
-        body: const Column(
+        body:  Column(
           children: [
-            Bookmark(),
-            SizedBox(
+            const Bookmark(),
+            const SizedBox(
               height: 50,
             ),
-            ExplicitAnimation(),
+            const ExplicitAnimation(),
+            const SizedBox(
+              height: 50,
+            ),
+            PhotoHero(
+              width: 150,
+              photo: 'assets/moon.jpg',
+              onTap: () {
+                Navigator.of(context).push(MaterialPageRoute(
+                  builder: (context) {
+                    return const HeroPage();
+                  },
+                  ));
+              },
+            )
           ],
         ));
   }
@@ -108,7 +122,6 @@ class _ExplicitAnimationState extends State<ExplicitAnimation>
   @override
   void initState() {
     super.initState();
-
     _animationController = AnimationController(
       duration: const Duration(seconds: 15),
       vsync: this,
@@ -131,7 +144,6 @@ class _ExplicitAnimationState extends State<ExplicitAnimation>
           ),
         ),
         Align(
-         
           child: TimeStopper(
             controller: _animationController,
           ),
@@ -162,13 +174,37 @@ class TimeStopper extends StatelessWidget {
         }
       },
       child: Container(
-        decoration: const BoxDecoration(
-          color: Colors.transparent
-        ),
+        decoration: const BoxDecoration(color: Colors.transparent),
         width: 60,
         height: 50,
         child: const Text('Control'),
       ),
+    );
+  }
+}
+
+class PhotoHero extends StatelessWidget {
+  const PhotoHero(
+      {super.key, required this.photo, this.onTap, required this.width});
+  final String photo;
+  final VoidCallback? onTap;
+  final double width;
+  @override
+  Widget build(BuildContext context) {
+    return SizedBox(
+      width: width,
+      child: Hero(
+          tag: photo,
+          child: Material(
+            color: Colors.transparent,
+            child: InkWell(
+              onTap:  onTap,
+              child: Image.asset(
+                photo,
+                fit: BoxFit.contain,
+              ),
+            ),
+          )),
     );
   }
 }
